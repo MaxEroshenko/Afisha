@@ -1,66 +1,83 @@
 package ru.netology.manager;
 
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+
 import ru.netology.domain.Afisha;
-import ru.netology.repository.CartRepository;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
-@ExtendWith(MockitoExtension.class)
+
 public class CartManagerTestNonEmpty {
-    @Mock
-    private CartRepository repository;
-    @InjectMocks
-    private CartAfisha manager;
-    private Afisha first = new Afisha(1, 1, "first", 1, 1);
-    private Afisha second = new Afisha(2, 2, "second", 1, 1);
-    private Afisha third = new Afisha(3, 3, "third", 1, 1);
 
-    @BeforeEach
-    public void setUp() {
-        manager.add(first);
-        manager.add(second);
-        manager.add(third);
-    }
 
-    @Test
-    public void shouldRemoveIfExists() {
-        int idToRemove = 1;
-        // настройка заглушки
-        Afisha[] returned = new Afisha[]{second, third};
-        doReturn(returned).when(repository).findAll();
-        doNothing().when(repository).removeById(idToRemove);
+        private CartAfisha manager = new CartAfisha();
+    private Afisha first = new Afisha(1, 1, "url1", "name1", "genre1", 6);
+        private Afisha second = new Afisha(2, 2, "url2", "name2", "genre2", 12);
+        private Afisha third = new Afisha(3, 3, "url3", "name3", "genre3", 16);
+        private Afisha forth = new Afisha(4, 4, "url4", "name4", "genre1", 6);
+        private Afisha fifth = new Afisha(5, 5, "url5", "name5", "genre2", 12);
+        private Afisha sixth = new Afisha(6, 6, "url6", "name6", "genre3", 18);
+        private Afisha seventh = new Afisha(7, 7, "url7", "name7", "genre1", 6);
+        private Afisha eighth = new Afisha(8, 8, "url8", "name8", "genre2", 12);
+        private Afisha ninth = new Afisha(9, 9, "url9", "name9", "genre3", 15);
+        private Afisha tenth = new Afisha(10, 10, "url10", "name10", "genre1", 6);
+        private Afisha eleventh = new Afisha(11, 11, "url11", "name11", "genre2", 12);
+        private Afisha twelfth = new Afisha(12, 12, "url12", "name12", "genre3", 17);
 
-        manager.removeById(idToRemove);
-        Afisha[] expected = new Afisha[]{third, second};
-        Afisha[] actual = manager.getAll();
-        assertArrayEquals(expected, actual);
+        @Test
+        public void giveTenOutOfTwelve() {
+            manager.add(first);
+            manager.add(second);
+            manager.add(third);
+            manager.add(forth);
+            manager.add(fifth);
+            manager.add(sixth);
+            manager.add(seventh);
+            manager.add(eighth);
+            manager.add(ninth);
+            manager.add(tenth);
+            manager.add(eleventh);
+            manager.add(twelfth);
 
-        // удостоверяемся, что заглушка была вызвана с нужным значением
-        // но это уже проверка "внутренней" реализации
-        verify(repository).removeById(idToRemove);
-    }
+            Afisha[] actual = manager.getAll();
+            Afisha[] expected = new Afisha[]{twelfth, eleventh, tenth, ninth, eighth, seventh, sixth, fifth, forth, third};
 
-    @Test
-    public void shouldNotRemoveIfNotExists() {
-        int idToRemove = 4;
-        Afisha[] returned = new Afisha[]{first, second, third};
-        doReturn(returned).when(repository).findAll();
-        doNothing().when(repository).removeById(idToRemove);
+            assertArrayEquals(expected, actual);
+        }
 
-        manager.removeById(idToRemove);
-        Afisha[] expected = new Afisha[]{third, second, first};
-        Afisha[] actual = manager.getAll();
+        @Test
+        public void giveTenOutOfTen() {
+            manager.add(first);
+            manager.add(second);
+            manager.add(third);
+            manager.add(forth);
+            manager.add(fifth);
+            manager.add(sixth);
+            manager.add(seventh);
+            manager.add(eighth);
+            manager.add(ninth);
+            manager.add(tenth);
 
-        assertArrayEquals(expected, actual);
-        // удостоверяемся, что заглушка была вызвана с нужным значением
-        // но это уже проверка "внутренней" реализации
-        verify(repository).removeById(idToRemove);
-    }
+            Afisha[] actual = manager.getAll();
+            Afisha[] expected = new Afisha[]{tenth, ninth, eighth, seventh, sixth, fifth, forth, third, second, first};
+
+            assertArrayEquals(expected, actual);
+        }
+
+        @Test
+        public void releaseFiveFilms() {
+            CartAfisha movieManager = new CartAfisha(5);
+            movieManager.add(first);
+            movieManager.add(second);
+            movieManager.add(third);
+            movieManager.add(forth);
+            movieManager.add(fifth);
+
+            Afisha[] actual = movieManager.getAll();
+            Afisha[] expected = new Afisha[]{fifth, forth, third, second, first};
+
+            assertArrayEquals(expected, actual);
+        }
 }
