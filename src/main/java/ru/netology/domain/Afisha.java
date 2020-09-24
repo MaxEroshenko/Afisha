@@ -16,7 +16,4 @@ public class Afisha {
         private int ageLimit;
         private boolean premiere;
 
-        public Afisha(int i, int i1, String url1, String name1, String genre1, int i2) {
-
-        }
 }
