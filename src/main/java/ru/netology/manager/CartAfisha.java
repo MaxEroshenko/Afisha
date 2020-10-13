@@ -5,17 +5,18 @@ import ru.netology.repository.AfishaRepository;
 
 public class CartAfisha {
     private static AfishaRepository repository;
-    private static int afishaLength = 10;
+    private int afishaLength = 4;
 
     public CartAfisha(AfishaRepository repository) {
         this.repository = repository;
     }
 
-    public static void add(Afisha item) {
+    public void add(Afisha item) {
+
         repository.save(item);
     }
 
-    public static Afisha[] getAll() {
+    public Afisha[] getAll() {
         Afisha[] items = repository.findAll();
         int resultLength = Math.min(afishaLength, items.length);
         Afisha[] result = new Afisha[resultLength];

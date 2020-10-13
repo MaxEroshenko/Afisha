@@ -22,38 +22,60 @@ public class CartManagerTest {
     private CartAfisha cartAfisha;
     private Afisha first = new Afisha(1, 1, "url1", "name1", "genre1", 6, true);
     private Afisha second = new Afisha(2, 2, "url2", "name2", "genre2", 12, false);
-    private Afisha third = new Afisha(3, 3, "url3", "name3", "genre3", 18, false);
-    private Afisha forth = new Afisha(4, 4, "url4", "name4", "genre1", 6, true);
+    private Afisha third = new Afisha(3, 3, "url3", "name3", "genre3", 6, true);
+    private Afisha fourth = new Afisha(4, 4, "url4", "name4", "genre4", 6, true);
 
     @BeforeEach
     public void setUp() {
         cartAfisha.add(first);
         cartAfisha.add(second);
         cartAfisha.add(third);
+        cartAfisha.add(fourth);
     }
 
     @Test
-    public void shouldAdd() {
-        CartAfisha.add(forth);
-        // настройка заглушки
-        Afisha[] returned = new Afisha[]{first, second, third, forth};
-        doReturn(returned).when(afishaRepository).findAll();
+    void shouldAdd() {
 
-        Afisha[] expected = new Afisha[]{first, second, third, forth};
-        Afisha[] actual = afishaRepository.findAll();
+
+        Afisha[] returned = new Afisha[]{first, second, third, fourth};
+        doReturn(returned).when(afishaRepository).findAll();
+        doNothing().when(afishaRepository).save(fourth);
+
+
+        cartAfisha.add(fourth);
+        Afisha[] actual = cartAfisha.getAll();
+        Afisha[] expected = new Afisha[]{fourth, third, second, first};
+
         assertArrayEquals(expected, actual);
 
     }
 
     @Test
-    public void shouldGetAll() {
-        // настройка заглушки
+    void doesNotAddFilms() {
+
+        Afisha[] returned = new Afisha[]{};
+        doReturn(returned).when(afishaRepository).findAll();
+
+        cartAfisha.add(third);
+        Afisha[] actual = cartAfisha.getAll();
+        Afisha[] expected = new Afisha[]{};
+
+        assertArrayEquals(expected, actual);
+
+
+    }
+
+    @Test
+    void moreThanThreeShouldBeAdded() {
+
         Afisha[] returned = new Afisha[]{first, second, third};
         doReturn(returned).when(afishaRepository).findAll();
+        doNothing().when(afishaRepository).save(fourth);
 
+        cartAfisha.add(fourth);
+        Afisha[] actual = cartAfisha.getAll();
         Afisha[] expected = new Afisha[]{third, second, first};
-        Afisha[] actual = CartAfisha.getAll();
-        assertArrayEquals(expected, actual);
 
+        assertArrayEquals(expected, actual);
     }
 }
