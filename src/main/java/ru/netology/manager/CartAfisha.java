@@ -1,22 +1,25 @@
 package ru.netology.manager;
 
 import ru.netology.domain.Afisha;
-import ru.netology.repository.CartRepository;
+import ru.netology.repository.AfishaRepository;
 
 public class CartAfisha {
-    private CartRepository repository;
+    private static AfishaRepository repository;
+    private int afishaLength = 4;
 
-    public CartAfisha(CartRepository repository) {
+    public CartAfisha(AfishaRepository repository) {
         this.repository = repository;
     }
 
     public void add(Afisha item) {
+
         repository.save(item);
     }
 
     public Afisha[] getAll() {
         Afisha[] items = repository.findAll();
-        Afisha[] result = new Afisha[items.length];
+        int resultLength = Math.min(afishaLength, items.length);
+        Afisha[] result = new Afisha[resultLength];
         for (int i = 0; i < result.length; i++) {
             int index = items.length - i - 1;
             result[i] = items[index];
@@ -24,7 +27,4 @@ public class CartAfisha {
         return result;
     }
 
-    public void removeById(int id) {
-        repository.removeById(id);
-    }
 }
